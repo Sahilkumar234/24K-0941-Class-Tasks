@@ -1,7 +1,8 @@
 #include <iostream>
 using namespace std;
 
-struct Product {
+class Product {
+public:
     string name;
     float price;
     string description;
