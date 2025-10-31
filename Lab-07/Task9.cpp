@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-struct Node {
+class Node {
     int value;
     Node* next;
 };
