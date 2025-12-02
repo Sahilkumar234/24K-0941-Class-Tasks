@@ -1,82 +1,131 @@
-#include<iostream>
+#include <iostream>
 using namespace std;
-const int SIZE = 15;
 
-class QuadraticProb {
-    public:
-    int rollNO[SIZE];
-    string name[SIZE];
+const int SIZE = 10;
 
-    QuadraticProb() {
-        for(int i=0;i<SIZE;i++) {
-            rollNO[i] = -1;
-            name[i] = "";
+class LinearHashing {
+public:
+    int arr[SIZE];
+
+    LinearHashing() {
+        for (int i = 0; i < SIZE; i++) {
+            arr[i] = -1; 
         }
     }
 
-    void insertRecord(int rollNum,string studName) {
-        int index = rollNum % SIZE;
-        int attempt = 0;
+    void insert(int newElem) {
+        int index = newElem % SIZE;
+        int startIndex = index;
 
-        while(attempt < SIZE) {
-            int newIndex = (index + (attempt * attempt)) % SIZE;
+        while (arr[index] != -1) {
+            index = (index + 1) % SIZE;
 
-            if(rollNO[newIndex] == -1) {
-                rollNO[newIndex] = rollNum;
-                name[newIndex] = studName;
-                cout<<"Record inserted at index: "<<newIndex<<endl;
+            if (index == startIndex) {
+                cout << "Hash Table is FULL!!" << endl;
                 return;
             }
-            attempt++;
         }
-        cout<<"Hash Table is FULL now!!"<<endl;
+
+        arr[index] = newElem;
+        cout << "Inserted: " << newElem << endl;
     }
 
-    void searchRecord(int searchRoll) {
-        int index = searchRoll % SIZE;
-        int attempt = 0;
+    void removeKey(int key) {
+        int index = key % SIZE;
+        int startIndex = index;
 
-        while(attempt < SIZE) {
-            int newIndex = (index + (attempt*attempt)) % SIZE;
-            if(rollNO[newIndex] == searchRoll) {
-                cout<<"Record found => Roll NO: "<<rollNO[index]<<" Name: "<<name[newIndex]<<endl;
+        while (arr[index] != -1) {
+            if (arr[index] == key) {
+                cout << "Element " << key << " deleted" << endl;
+                arr[index] = -1; 
                 return;
             }
-            attempt++;
+            index = (index + 1) % SIZE;
+
+            if (index == startIndex)
+                break;
         }
-        cout<<"Not Found"<<endl;
+
+        cout << "Not found for deletion" << endl;
+    }
+
+    void search(int key) {
+        int index = key % SIZE;
+        int startIndex = index;
+
+        while (arr[index] != -1) {
+            if (arr[index] == key) {
+                cout << "Element " << key << " Found at index " << index << endl;
+                return;
+            }
+            index = (index + 1) % SIZE;
+
+            if (index == startIndex)
+                break;
+        }
+
+        cout << "Not Found" << endl;
     }
 
     void display() {
-        cout<<"Student Hash Table"<<endl;
-
-        for(int i=0;i<SIZE;i++) {
-            if(rollNO[i] != -1) {
-                cout<<"Index "<<i<<": Roll No => "<<rollNO[i]<<" || Name => "<<name[i]<<endl;
-            } else {
-                cout<<"Index "<<i<<": is empty"<<endl;
-            }
+        cout << "\nHash Table:\n";
+        for (int i = 0; i < SIZE; i++) {
+            if (arr[i] == -1)
+                cout << i << " : EMPTY" << endl;
+            else
+                cout << i << " : " << arr[i] << endl;
         }
-        cout<<endl;
+        cout << endl;
     }
 };
 
 int main() {
-    QuadraticProb ht;
+    LinearHashing H;
+    int choice, value;
 
-    ht.insertRecord(101, "Ali");
-    ht.insertRecord(56, "Sana");
-    ht.insertRecord(200, "Rohit");
-    ht.insertRecord(41, "John");
-    ht.insertRecord(89, "Mary");
+    do {
+        cout<<endl;
+        cout << "===== MENU ====="<<endl;
+        cout << "1. Insert\n";
+        cout << "2. Search\n";
+        cout << "3. Delete\n";
+        cout << "4. Display\n";
+        cout << "5. Exit\n";
+        cout << "Enter choice: ";
+        cin >> choice;
 
-    cout<<endl;
-    cout << "Searching Records: "<<endl;
-    ht.searchRecord(200);
-    ht.searchRecord(89);
-    ht.searchRecord(999);  
+        switch (choice) {
+        case 1:
+            cout << "Enter value to insert: ";
+            cin >> value;
+            H.insert(value);
+            break;
 
-    ht.display();
+        case 2:
+            cout << "Enter value to search: ";
+            cin >> value;
+            H.search(value);
+            break;
+
+        case 3:
+            cout << "Enter value to delete: ";
+            cin >> value;
+            H.removeKey(value);
+            break;
+
+        case 4:
+            H.display();
+            break;
+
+        case 5:
+            cout << "Exiting..."<<endl;
+            break;
+
+        default:
+            cout << "Invalid choice!"<<endl;
+        }
+
+    } while (choice != 5);
 
     return 0;
 }
